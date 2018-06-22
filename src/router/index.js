@@ -1,6 +1,10 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import Player from '@/components/Player'
+import List from '@/components/List'
+import Lrc from '@/components/Lrc'
+import Main from '@/components/Main'
+import Header from '@/components/Header'
 
 Vue.use(Router)
 
@@ -8,8 +12,21 @@ export default new Router({
   routes: [
     {
       path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      components: {
+        default: Main,
+        header: Header
+      },
+      children: [
+        {
+          path: '', component: Player, name: 'Player'
+        },
+        {
+          path: 'lrc', component: Lrc, name: 'Lrc'
+        },
+        {
+          path: 'list', component: List, name: 'List'
+        }
+      ]
     }
   ]
 })
