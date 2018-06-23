@@ -25,9 +25,9 @@ export default {
       type: Boolean,
       required: true
     },
-    volume: {
-      default: 80
-    },
+    // volume: {
+    //   default: 80
+    // },
     // curTime:{
     //   type:Number
     // }
@@ -39,9 +39,9 @@ export default {
     'paused' () {
       this.playPause()
     },
-    'volume' (val) {
-      this.changeVolume(val)
-    },
+    // 'volume' (val) {
+    //   this.changeVolume(val)
+    // },
     'curTime' (val, oldVal) {
       if (Math.abs(val - oldVal) > 1) {
         this.changeCurrentTime(val)
@@ -79,7 +79,11 @@ export default {
       this.currentTime = time
       this.audio.currentTime = time
     }
-
+  },
+  mounted () {
+    EventBus.$on('changeVolume', volume => {
+      this.changeVolume(volume)
+    })
   }
 }
 </script>

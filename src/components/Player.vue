@@ -11,45 +11,51 @@
       </h2>
       <h3 class="music-artist mt10">{{ currentItem.artist }}</h3>
       <div class="row mt20">
-        <div class="left-time -col-auto">-05:02</div>
+        <div class="left-time -col-auto">-{{ leftTime }}</div>
         <div class="volume-container">
-          <i
-            class="icon-volume rt"
-            style="top: 5px; left: -5px;"
-          ></i>
-            <div class="volume-wrapper">
-              <div class="components-progress">
-                <div
-                  class="progress"
-                  style="width: 80%; background: rgb(170, 170, 170);"
-                ></div>
-            </div>
+          <i class="icon-volume rt" style="top: 5px; left: -5px;"></i>
+          <div class="volume-wrapper">
+            <Progress
+              :progress="volume"
+              barColor ="#2f9842"
+              @changeProgress="changeVolume"
+            />
+            <!-- <div class="components-progress">
+              <div class="progress" style="width: 80%; background: rgb(170, 170, 170);"></div>
+            </div> -->
+          </div>
         </div>
       </div>
+      <div style="height: 10px; line-height: 10px;">
+        <Progress
+          :progress="currentPercentAbsolute"
+          barColor ="rgb(47, 152, 66)"
+          @changeProgress="changeProgress"
+        />
+        <!-- <div class="components-progress">
+          <div class="progress" style="width: 2.64284%; background: rgb(47, 152, 66);"></div>
+        </div> -->
+
+      </div>
+      <div class="mt35 row">
+        <div><i class="icon prev"></i><i class="icon ml20 pause"></i><i class="icon next ml20"></i></div>
+        <div class="-col-auto"><i class="icon repeat-cycle"></i></div>
+      </div>
     </div>
-    <div style="height: 10px; line-height: 10px;">
-      <div class="components-progress">
-        <div
-          class="progress"
-          style="width: 2.64284%; background: rgb(47, 152, 66);"
-        ></div>
-    </div>
+    <div class="-col-auto cover"><a href="/lrc"><img class="play" src="http://oj4t8z2d5.bkt.clouddn.com/%E9%A3%8E%E7%BB%A7%E7%BB%AD%E5%90%B9.jpg" alt="风继续吹"></a></div>
   </div>
-  <div class="mt35 row">
-    <div><i class="icon prev"></i><i class="icon ml20 pause"></i><i class="icon next ml20"></i></div>
-    <div class="-col-auto"><i class="icon repeat-cycle"></i></div>
-  </div>
-</div>
-<div class="-col-auto cover"><a href="/lrc"><img class="play" src="http://oj4t8z2d5.bkt.clouddn.com/%E9%A3%8E%E7%BB%A7%E7%BB%AD%E5%90%B9.jpg" alt="风继续吹"></a></div>
-</div>
 </div>
 </template>
 
 <script>
-// import { formatTime } from '@/utils/formatTime'
-import {EventBus} from '@/EventBus'
+import { formatTime } from '@/utils/formatTime'
+import { EventBus } from '@/EventBus'
+import Progress from './Progress/Progress'
 export default {
   name: 'Player',
+  components: {
+    Progress
+  },
   data () {
     return {
       currentItem: {},
@@ -58,6 +64,24 @@ export default {
       currentTime: 0,
       duration: 0,
       volume: 80
+    }
+  },
+  computed: {
+    leftTime () {
+      return formatTime(this.duration - this.currentTime)
+    },
+    currentPercentAbsolute () {
+      return this.currentTime / this.duration * 100
+    }
+  },
+  methods: {
+    changeVolume (volume) {
+      this.volume = volume * 100
+      EventBus.$emit('changeVolume', this.volume)
+    },
+    changeProgress (progress) {
+      this.currentTime = progress * this.duration
+      EventBus.$emit('changeCurrentTime', this.currentTime)
     }
   },
   created () {

@@ -4,6 +4,7 @@
     <Mplayer
       :url="currentItem.file"
       :paused="paused"
+      :changeTime="changeTime"
     />
     <router-view></router-view>
   </div>
@@ -24,7 +25,8 @@ export default {
       musicList: MUSIC_LIST,
       currentIndex: 0,
       paused: true,
-      repeatType: 'cycle'
+      repeatType: 'cycle',
+      changeTime: 0
       // currentTime: 0,
       // duration: 0
     }
@@ -44,6 +46,9 @@ export default {
   },
   mounted () {
     EventBus.$emit('setMedia', this.currentItem)
+    EventBus.$on('changeCurrentTime', time => {
+      this.changeTime = time
+    })
   }
 
 }
