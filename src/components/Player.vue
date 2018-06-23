@@ -38,11 +38,15 @@
 
       </div>
       <div class="mt35 row">
-        <div><i class="icon prev"></i><i class="icon ml20 pause"></i><i class="icon next ml20"></i></div>
+        <div><i class="icon prev"></i><i class="icon ml20" :class="paused ? 'play':'pause'" @click="playPause"></i><i class="icon next ml20"></i></div>
         <div class="-col-auto"><i class="icon repeat-cycle"></i></div>
       </div>
     </div>
-    <div class="-col-auto cover"><a href="/lrc"><img class="play" src="http://oj4t8z2d5.bkt.clouddn.com/%E9%A3%8E%E7%BB%A7%E7%BB%AD%E5%90%B9.jpg" alt="风继续吹"></a></div>
+    <div class="-col-auto cover">
+      <router-link to="/lrc">
+        <img :class="paused? 'pause':'play'" :src="currentItem.cover" :alt="currentItem.title">
+      </router-link>
+    </div>
   </div>
 </div>
 </template>
@@ -82,6 +86,10 @@ export default {
     changeProgress (progress) {
       this.currentTime = progress * this.duration
       EventBus.$emit('changeCurrentTime', this.currentTime)
+    },
+    playPause () {
+      this.paused = !this.paused
+      EventBus.$emit('playPause', this.paused)
     }
   },
   created () {
@@ -95,6 +103,10 @@ export default {
       this.currentTime = currentTime
     })
   }
+  // beforeRouteLeave (to, from, next) {
+  //   console.log(to)
+  //   next()
+  // }
 }
 </script>
 

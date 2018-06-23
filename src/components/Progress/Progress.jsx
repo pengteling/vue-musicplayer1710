@@ -12,8 +12,9 @@ export default {
   },
   methods:{
     changeProgress(e){
+      //console.log(e)
       let progress = (e.clientX - this.$refs.progressbar.getBoundingClientRect().left) / this.$refs.progressbar.clientWidth
-      console.log(progress)
+      //console.log(progress)
       this.$emit("changeProgress",progress)
     }
   },

@@ -39,6 +39,16 @@ export default {
   watch: {
     'currentItem' (val) {
       EventBus.$emit('setMedia', val)
+    },
+    '$route' (to, form) {
+      if (to.name === 'List') {
+        this.$nextTick(() => {
+          EventBus.$emit('getList', {
+            musicList: this.musicList,
+            currentIndex: this.currentIndex
+          })
+        })
+      }
     }
   },
   methods: {
@@ -48,6 +58,13 @@ export default {
     EventBus.$emit('setMedia', this.currentItem)
     EventBus.$on('changeCurrentTime', time => {
       this.changeTime = time
+    })
+    EventBus.$on('playPause', paused => {
+      this.paused = paused
+    })
+    EventBus.$emit('getList', {
+      musicList: this.musicList,
+      currentIndex: this.currentIndex
     })
   }
 
