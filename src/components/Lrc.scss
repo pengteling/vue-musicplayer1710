@@ -1,0 +1,16 @@
+.lrc-component{
+  text-align: center;
+  line-height: 2;
+  padding:50px;
+  ul{
+    height: 400px;
+    overflow-y: auto;
+    li{
+      transition: all 0.3s;
+      &.cur{
+        // color:#2f9842;
+        color:#ee0000
+      }
+    }
+  }
+}

@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 import Player from '@/components/Player'
 import List from '@/components/List'
-import Lrc from '@/components/Lrc'
+import Lrc from '@/components/Lrc.jsx'
 import Main from '@/components/Main'
 import Header from '@/components/Header'
 

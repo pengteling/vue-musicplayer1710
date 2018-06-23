@@ -14,8 +14,9 @@ export default {
     }
   },
   methods:{
-    deleteMusicItem(musicItem){
-
+    deleteMusicItem(musicItem, e){
+      e.stopPropagation()
+      EventBus.$emit('deleteMusicItem', musicItem)
     },
     changeMusicItem(musicItem){
       EventBus.$emit('changeMusicItem',musicItem)

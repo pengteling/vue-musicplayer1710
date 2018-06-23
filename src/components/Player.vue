@@ -131,6 +131,10 @@ export default {
     EventBus.$on('getCurrentTime', (currentTime) => {
       this.currentTime = currentTime
     })
+    /* EventBus.$on('sendPaused', paused => {
+      console.log('接收paused', paused)
+      this.paused = paused
+    }) */
   }
   // beforeRouteLeave (to, from, next) {
   //   console.log(to)

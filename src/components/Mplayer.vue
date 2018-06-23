@@ -4,6 +4,7 @@
     ref="audio"
     @loadedmetadata="loadedmetadata"
     @timeupdate="timeupdate"
+    @ended="ended"
   />
 
 </template>
@@ -49,6 +50,13 @@ export default {
     },
     'changeTime' (val) {
       this.changeCurrentTime(val)
+    },
+    '$route' (to, from) {
+      if (to.name === 'Player') {
+        this.$nextTick(() => {
+          EventBus.$emit('getDuration', this.duration)
+        })
+      }
     }
   },
   computed: {
@@ -78,6 +86,10 @@ export default {
     changeCurrentTime (time) {
       this.currentTime = time
       this.audio.currentTime = time
+    },
+    ended () {
+      EventBus.$emit('ended')
+      console.log(this.audio.paused)
     }
   },
   mounted () {
