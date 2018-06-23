@@ -9,6 +9,7 @@
   </ul>
 </template>
 <script>
+import './List.scss'
 import MusicItem from './MusicItem'
 import {EventBus} from '@/EventBus'
 export default {

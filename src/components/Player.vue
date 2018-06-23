@@ -38,8 +38,8 @@
 
       </div>
       <div class="mt35 row">
-        <div><i class="icon prev"></i><i class="icon ml20" :class="paused ? 'play':'pause'" @click="playPause"></i><i class="icon next ml20"></i></div>
-        <div class="-col-auto"><i class="icon repeat-cycle"></i></div>
+        <div><i class="icon prev" @click="prevNext('prev')"></i><i class="icon ml20" :class="paused ? 'play':'pause'" @click="playPause"></i><i class="icon next ml20" @click="prevNext('next')"></i></div>
+        <div class="-col-auto"><i :class="`icon repeat-${repeatType}`" @click="changeRepeatType" :title="repeatTypeStr"></i></div>
       </div>
     </div>
     <div class="-col-auto cover">
@@ -76,6 +76,16 @@ export default {
     },
     currentPercentAbsolute () {
       return this.currentTime / this.duration * 100
+    },
+    repeatTypeStr () {
+      switch (this.repeatType) {
+        case 'cycle':
+          return '顺序播放'
+        case 'once':
+          return '单曲循环'
+        case 'random':
+          return '随机播放'
+      }
     }
   },
   methods: {
@@ -90,6 +100,25 @@ export default {
     playPause () {
       this.paused = !this.paused
       EventBus.$emit('playPause', this.paused)
+    },
+    prevNext (type) {
+      EventBus.$emit('prevNext', type)
+    },
+    changeRepeatType () {
+      let newRepeatType
+      switch (this.repeatType) {
+        case 'cycle':
+          newRepeatType = 'once'
+          break
+        case 'once':
+          newRepeatType = 'random'
+          break
+        case 'random':
+          newRepeatType = 'cycle'
+          break
+      }
+      this.repeatType = newRepeatType
+      EventBus.$emit('changeRepeatType', newRepeatType)
     }
   },
   created () {

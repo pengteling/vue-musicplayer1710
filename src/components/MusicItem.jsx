@@ -1,3 +1,4 @@
+import {EventBus} from '@/EventBus'
 export default {
   name:'MusicItem',
   props:{
@@ -15,14 +16,22 @@ export default {
   methods:{
     deleteMusicItem(musicItem){
 
+    },
+    changeMusicItem(musicItem){
+      EventBus.$emit('changeMusicItem',musicItem)
     }
   },
   render(){
     return (
-      <li class={`components-listitem row ${this.focus? 'focus':''}`}>
+      <li class={`components-listitem row ${this.focus? 'focus':''}`} onClick={()=>{
+        if(!this.focus){
+          this.changeMusicItem(this.musicItem)
+        }
+      }
+      }>
         <p>{this.musicItem.title} - {this.musicItem.artist}</p>
         <p class="lrclink -col1"><router-link to="/lrc">歌词</router-link></p>
-        <p class="-col-auto delete" onClick={this.deleteMusicItem.bind(this.musicItem)}></p>
+        <p class="-col-auto delete" onClick={this.deleteMusicItem.bind(this,this.musicItem)}></p>
       </li>
     )
   }

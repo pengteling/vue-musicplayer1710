@@ -84,6 +84,12 @@ export default {
     EventBus.$on('changeVolume', volume => {
       this.changeVolume(volume)
     })
+    this.audio.oncanplay = () => {
+      console.log('canplay事件')
+      if (!this.paused) {
+        this.audio.play()
+      }
+    }
   }
 }
 </script>
