@@ -1,0 +1,3 @@
+export const CHANGE_PROGRESS = 'CHANGE_PROGRESS'
+export const CHANGE_VOLUME = 'CHANGE_VOLUME'
+export const PLAY_PAUSE = 'PLAY_PAUSE'

@@ -19,8 +19,8 @@ export default {
   },
   props: {
     url: {
-      type: String,
-      required: true
+      type: String
+      // required: true
     },
     paused: {
       type: Boolean,

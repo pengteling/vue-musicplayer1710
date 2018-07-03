@@ -18,7 +18,7 @@
             <Progress
               :progress="volume"
               barColor ="#2f9842"
-              @changeProgress="changeVolume"
+              @changeProgress="CHANGE_VOLUME"
             />
             <!-- <div class="components-progress">
               <div class="progress" style="width: 80%; background: rgb(170, 170, 170);"></div>
@@ -30,7 +30,7 @@
         <Progress
           :progress="currentPercentAbsolute"
           barColor ="rgb(47, 152, 66)"
-          @changeProgress="changeProgress"
+          @changeProgress="CHANGE_PROGRESS"
         />
         <!-- <div class="components-progress">
           <div class="progress" style="width: 2.64284%; background: rgb(47, 152, 66);"></div>
@@ -38,8 +38,8 @@
 
       </div>
       <div class="mt35 row">
-        <div><i class="icon prev" @click="prevNext('prev')"></i><i class="icon ml20" :class="paused ? 'play':'pause'" @click="playPause"></i><i class="icon next ml20" @click="prevNext('next')"></i></div>
-        <div class="-col-auto"><i :class="`icon repeat-${repeatType}`" @click="changeRepeatType" :title="repeatTypeStr"></i></div>
+        <div><i class="icon prev" @click="PREV_NEXT('prev')"></i><i class="icon ml20" :class="paused ? 'play':'pause'" @click="PLAY_PAUSE"></i><i class="icon next ml20" @click="PREV_NEXT('next')"></i></div>
+        <div class="-col-auto"><i :class="`icon repeat-${repeatType}`" @click="CHANGE_REPEAT_TYPE" :title="repeatTypeStr"></i></div>
       </div>
     </div>
     <div class="-col-auto cover">
@@ -52,31 +52,36 @@
 </template>
 
 <script>
-import { formatTime } from '@/utils/formatTime'
-import { EventBus } from '@/EventBus'
+// import { formatTime } from '@/utils/formatTime'
+// import { EventBus } from '@/EventBus'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 import Progress from './Progress/Progress'
 export default {
   name: 'Player',
   components: {
     Progress
   },
-  data () {
-    return {
-      currentItem: {},
-      repeatType: 'cycle',
-      paused: true,
-      currentTime: 0,
-      duration: 0,
-      volume: 80
-    }
-  },
+  // data () {
+  //   return {
+  //     currentItem: {},
+  //     repeatType: 'cycle',
+  //     paused: true,
+  //     currentTime: 0,
+  //     duration: 0,
+  //     volume: 80
+  //   }
+  // },
   computed: {
-    leftTime () {
-      return formatTime(this.duration - this.currentTime)
-    },
-    currentPercentAbsolute () {
-      return this.currentTime / this.duration * 100
-    },
+    ...mapState('player', ['volume', 'paused']),
+    ...mapGetters('player', ['leftTime', 'currentPercentAbsolute']),
+    ...mapGetters('list', ['currentItem']),
+    // leftTime () {
+    //   return formatTime(this.duration - this.currentTime)
+    // },
+    // currentPercentAbsolute () {
+    //   return this.currentTime / this.duration * 100
+    // },
+    ...mapState('list', ['repeatType']),
     repeatTypeStr () {
       switch (this.repeatType) {
         case 'cycle':
@@ -89,48 +94,57 @@ export default {
     }
   },
   methods: {
-    changeVolume (volume) {
-      this.volume = volume * 100
-      EventBus.$emit('changeVolume', this.volume)
-    },
-    changeProgress (progress) {
-      this.currentTime = progress * this.duration
-      EventBus.$emit('changeCurrentTime', this.currentTime)
-    },
-    playPause () {
-      this.paused = !this.paused
-      EventBus.$emit('playPause', this.paused)
-    },
-    prevNext (type) {
-      EventBus.$emit('prevNext', type)
-    },
-    changeRepeatType () {
-      let newRepeatType
-      switch (this.repeatType) {
-        case 'cycle':
-          newRepeatType = 'once'
-          break
-        case 'once':
-          newRepeatType = 'random'
-          break
-        case 'random':
-          newRepeatType = 'cycle'
-          break
-      }
-      this.repeatType = newRepeatType
-      EventBus.$emit('changeRepeatType', newRepeatType)
-    }
+    ...mapMutations('player', [
+      'CHANGE_PROGRESS',
+      'CHANGE_VOLUME',
+      'PLAY_PAUSE'
+    ]),
+    // changeVolume (volume) {
+    //   this.volume = volume * 100
+    //   EventBus.$emit('changeVolume', this.volume)
+    // },
+    // changeProgress (progress) {
+    //   this.currentTime = progress * this.duration
+    //   EventBus.$emit('changeCurrentTime', this.currentTime)
+    // },
+    // playPause () {
+    //   this.paused = !this.paused
+    //   EventBus.$emit('playPause', this.paused)
+    // },
+    ...mapMutations('list', [
+      'CHANGE_REPEAT_TYPE',
+      'PREV_NEXT'
+    ])
+    // prevNext (type) {
+    //   EventBus.$emit('prevNext', type)
+    // },
+    // changeRepeatType () {
+    //   let newRepeatType
+    //   switch (this.repeatType) {
+    //     case 'cycle':
+    //       newRepeatType = 'once'
+    //       break
+    //     case 'once':
+    //       newRepeatType = 'random'
+    //       break
+    //     case 'random':
+    //       newRepeatType = 'cycle'
+    //       break
+    //   }
+    //   this.repeatType = newRepeatType
+    //   EventBus.$emit('changeRepeatType', newRepeatType)
+    // }
   },
   created () {
-    EventBus.$on('setMedia', (currentItem) => {
-      this.currentItem = currentItem
-    })
-    EventBus.$on('getDuration', (duration) => {
-      this.duration = duration
-    })
-    EventBus.$on('getCurrentTime', (currentTime) => {
-      this.currentTime = currentTime
-    })
+    // EventBus.$on('setMedia', (currentItem) => {
+    //   this.currentItem = currentItem
+    // })
+    // EventBus.$on('getDuration', (duration) => {
+    //   this.duration = duration
+    // })
+    // EventBus.$on('getCurrentTime', (currentTime) => {
+    //   this.currentTime = currentTime
+    // })
     /* EventBus.$on('sendPaused', paused => {
       console.log('接收paused', paused)
       this.paused = paused
